@@ -4,13 +4,15 @@ import "./styles.css";
 import LSystem from "lindenmayer";
 import plant from "./plant"
 
+const main = document.querySelector("main");
+
 // Create a series of plants
 for (let x = 0; x<10; x++) {
   // Create a canvas
   const canvas = document.createElement("canvas");
   canvas.width = 200;
   canvas.height = 200;
-  document.body.appendChild(canvas);
+  main.appendChild(canvas);
 
   // Create the plant
   const plantVariation = plant(canvas);
