@@ -1,6 +1,14 @@
 // Require the L-system library
 import LSystem from "lindenmayer";
 
+const defaultStats = {
+    waterConsumption: 0,
+    waterCapacity: 0,
+    foodConsumption: 0,
+    foodCapacity: 0,
+    windResistance: 0,
+};
+
 const plant = (canvas) => {
     // Get the canvas context
     let ctx = canvas.getContext("2d");
@@ -10,6 +18,7 @@ const plant = (canvas) => {
     let leafLength = 20;
     let leafWidth = 6;
     let linewidth = segmentLength / 6;
+    const stats = { ...defaultStats };
 
     // Now initialize the L-System to generate the plant
     // see: https://github.com/nylki/lindenmayer/blob/master/docs/index.md#stochastic
@@ -17,13 +26,13 @@ const plant = (canvas) => {
     const lsystem = new LSystem({
         productions: {
             X: {
-            successors: [
-                { weight: 0.4, successor: "FF-[FX]++[FX]" },
-                { weight: 0.3, successor: "F-L" },
-            ],
+                successors: [
+                    { weight: 0.4, successor: "FF-[FX]++[FX]" },
+                    { weight: 0.3, successor: "F-L" },
+                ],
             },
             F: {
-            successors: [{ weight: 1.0, successor: "F" }],
+                successors: [{ weight: 1.0, successor: "F" }],
             },
         },
         finals: {
@@ -35,6 +44,10 @@ const plant = (canvas) => {
                 ctx.lineTo(0, segmentLength / (lsystem.iterations + 1));
                 ctx.stroke();
                 ctx.translate(0, segmentLength / (lsystem.iterations + 1) - 1.5);
+
+                stats.windResistance += 4 - lsystem.iterations;
+                stats.foodConsumption += 1;
+                stats.waterCapacity += 1;
             },
             // Draw a leaf
             L: () => {
@@ -44,6 +57,9 @@ const plant = (canvas) => {
                 ctx.stroke();
                 ctx.fill();
                 ctx.translate(0, segmentLength / (lsystem.iterations + 1) - 1.5);
+
+                stats.waterConsumption += 1;
+                stats.foodCapacity += 1;
             },
             // Go left
             "+": () => {
@@ -91,7 +107,7 @@ const plant = (canvas) => {
         lsystem.final();
     }
 
-    return {lsystem, draw};
+    return {lsystem, stats, draw};
 };
 
-export default plant;
+export { plant, defaultStats };
