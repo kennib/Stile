@@ -1,5 +1,7 @@
+// Require the L-system library
+import LSystem from "lindenmayer";
 
-export function plant(canvas) {
+const plant = (canvas) => {
     // Get the canvas context
     let ctx = canvas.getContext("2d");
 
@@ -9,12 +11,10 @@ export function plant(canvas) {
     let leafWidth = 6;
     let linewidth = segmentLength / 6;
 
-    // Now initialize the L-System to generate the tree
-    // We use the syntax for creating stochastic productions, see: https://github.com/nylki/lindenmayer/blob/master/docs/index.md#stochastic
-    // If you'd rather use your own stochastic function in the productions,
-    // you can do that too, see how it is done in this example:  https://codepen.io/nylki/pen/XdOqPd
+    // Now initialize the L-System to generate the plant
+    // see: https://github.com/nylki/lindenmayer/blob/master/docs/index.md#stochastic
 
-    this.lsystem = new LSystem({
+    const lsystem = new LSystem({
         productions: {
             X: {
             successors: [
@@ -32,9 +32,9 @@ export function plant(canvas) {
                 ctx.lineWidth += (Math.random() - 0.5) / 100;
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
-                ctx.lineTo(0, segmentLength / (tree.iterations + 1));
+                ctx.lineTo(0, segmentLength / (lsystem.iterations + 1));
                 ctx.stroke();
-                ctx.translate(0, segmentLength / (tree.iterations + 1) - 1.5);
+                ctx.translate(0, segmentLength / (lsystem.iterations + 1) - 1.5);
             },
             // Draw a leaf
             L: () => {
@@ -43,7 +43,7 @@ export function plant(canvas) {
                 ctx.ellipse(0, leafLength, leafWidth, leafLength, 0, 0, 2 * Math.PI);
                 ctx.stroke();
                 ctx.fill();
-                ctx.translate(0, segmentLength / (tree.iterations + 1) - 1.5);
+                ctx.translate(0, segmentLength / (lsystem.iterations + 1) - 1.5);
             },
             // Go left
             "+": () => {
@@ -71,23 +71,27 @@ export function plant(canvas) {
         },
     });
 
-    this.draw = () => {
+    const draw = () => {
         // Set up the colour
         ctx.strokeStyle = "rgb(55, 29, 4)";
         ctx.fillStyle = "rgb(50, 200, 44)";
 
         // Init and iterate the L-System
-        tree.setAxiom("FFFF-[X]++[X]");
-        tree.iterate(6);
+        lsystem.setAxiom("FFFF-[X]++[X]");
+        lsystem.iterate(6);
 
         // Finally draw
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Translate so that tree is (more or less) in the center
+        // Translate so that plant is (more or less) in the center
         ctx.translate(canvas.width / 2, canvas.height / 1.4);
         ctx.rotate(Math.PI);
         ctx.lineWidth = linewidth;
         lsystem.final();
     }
+
+    return {lsystem, draw};
 };
+
+export default plant;
