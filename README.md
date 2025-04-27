@@ -37,7 +37,7 @@ A simulation about mutating and naturally selecting plants.
 
 ## The prototype
 
-The [prototype](src/index.html) is very simple. Despite the buttons at the bottom of the page, it's not interactive. It just creates a random population of plants. Steps 1. and 2. in the core simulation loop. You can refresh the page to see a new population.
+The [prototype](https://wg8yxs-1234.csb.app/) is very simple. Despite the buttons at the bottom of the page, it's not interactive. It just creates a random population of plants. Steps 1. and 2. in the core simulation loop. You can refresh the page to see a new population.
 
 ### One key moment
 

@@ -1,8 +1,10 @@
 body {
   font-family: sans-serif;
+}
 
-  width: 100vw;
-  height: 100vh;
+#app {
+  width: 1200px;
+  height: 600px;
 
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -28,6 +30,6 @@ aside ul li output {
   flex: 1 0 20%;
 }
 
-aside ul li output[name=code] {
+aside ul li output[name="code"] {
   flex-basis: 100%;
 }
